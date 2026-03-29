@@ -55,18 +55,3 @@ def place_limit_order(client: BinanceClient, symbol, side, quantity, price):
 def estimate_notional(quantity: float, price: float | None, fallback_price: float = 60000):
     p = price if price else fallback_price
     return quantity * p
-
-
-def place_stop_limit_order(client: BinanceClient, symbol, side, quantity, price, stop_price):
-    resp = client.place_order(
-        symbol=symbol,
-        side=side,
-        type="STOP",
-        quantity=quantity,
-        price=price,
-        stopPrice=stop_price,
-        timeInForce="GTC",
-    )
-    logger.info("Stop-Limit order placed | id=%s status=%s stopPrice=%s limitPrice=%s",
-                resp.get("orderId"), resp.get("status"), stop_price, price)
-    return resp

@@ -13,11 +13,13 @@ logger = get_logger("bot.client")
 
 BASE_URL = "https://demo-fapi.binance.com"
 
+
 class BinanceAPIError(Exception):
     def __init__(self, code, msg):
         self.code = code
         self.msg = msg
         super().__init__(f"[{code}] {msg}")
+
 
 class BinanceClient:
     def __init__(self, api_key: str, api_secret: str):
@@ -38,51 +40,59 @@ class BinanceClient:
         ).hexdigest()
         return params
 
-    def _get(self, path: str, params: dict) -> dict:
+    def _get(self, path: str, params: dict, *, context: str = "") -> dict:
         params = {k: v for k, v in params.items() if v is not None}
         params = self._sign(params)
         url = BASE_URL + path
-        logger.debug("GET %s", url)
+        tag = f" ({context})" if context else ""
+        logger.debug("GET %s%s", url, tag)
         try:
             resp = self._session.get(url, params=params, timeout=10)
         except requests.exceptions.ConnectionError as e:
-            logger.error("Network error: %s", e)
+            logger.error("Network error on GET %s: %s", path, e)
             raise
-        logger.debug("Response %s: %s", resp.status_code, resp.text[:300])
         data = resp.json()
         if not resp.ok:
+            logger.warning("GET %s%s → %s %s", path, tag,
+                           data.get("code", resp.status_code), data.get("msg", resp.text))
             raise BinanceAPIError(data.get("code", resp.status_code), data.get("msg", resp.text))
+        logger.debug("GET %s%s → 200 OK", path, tag)
         return data
 
     def _post(self, path: str, params: dict) -> dict:
         params = {k: v for k, v in params.items() if v is not None}
         params = self._sign(params)
         url = BASE_URL + path
-        logger.debug("POST %s params=%s", url,
-                     {k: "***" if k == "signature" else v for k, v in params.items()})
+        safe = {k: ("***" if k == "signature" else v) for k, v in params.items()}
+        logger.debug("POST %s | params=%s", url, safe)
         try:
             resp = self._session.post(url, data=params, timeout=10)
         except requests.exceptions.ConnectionError as e:
-            logger.error("Network error: %s", e)
+            logger.error("Network error on POST %s: %s", path, e)
             raise
-        logger.debug("Response %s: %s", resp.status_code, resp.text[:300])
         data = resp.json()
         if not resp.ok:
+            logger.warning("POST %s → %s %s", path,
+                           data.get("code", resp.status_code), data.get("msg", resp.text))
             raise BinanceAPIError(data.get("code", resp.status_code), data.get("msg", resp.text))
+        logger.debug("POST %s → 200 OK | orderId=%s status=%s",
+                     path, data.get("orderId"), data.get("status"))
         return data
 
     def place_order(self, **kwargs) -> dict:
-        logger.info("Placing %s %s | symbol=%s qty=%s price=%s",
+        logger.info("Order request | side=%s type=%s symbol=%s qty=%s price=%s",
                     kwargs.get("side"), kwargs.get("type"),
                     kwargs.get("symbol"), kwargs.get("quantity"),
                     kwargs.get("price", "MARKET"))
         return self._post("/fapi/v1/order", kwargs)
 
     def get_order(self, symbol: str, order_id: int) -> dict:
-        return self._get("/fapi/v1/order", {"symbol": symbol, "orderId": order_id})
+        return self._get("/fapi/v1/order", {"symbol": symbol, "orderId": order_id},
+                         context=f"poll orderId={order_id}")
 
-    def get_account(self) -> dict:
-        return self._get("/fapi/v2/account", {})
+    def get_account(self, context: str = "account") -> dict:
+        return self._get("/fapi/v2/account", {}, context=context)
 
     def get_all_orders(self, symbol: str, limit: int = 10) -> list:
-        return self._get("/fapi/v1/allOrders", {"symbol": symbol, "limit": limit})
+        return self._get("/fapi/v1/allOrders", {"symbol": symbol, "limit": limit},
+                         context=f"history symbol={symbol} limit={limit}")

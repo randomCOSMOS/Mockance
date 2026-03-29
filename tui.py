@@ -11,7 +11,7 @@ from rich.table import Table
 from rich.text import Text
 
 from bot.client import BinanceAPIError, BinanceClient
-from bot.logging_config import get_logger
+from bot.logging_config import get_logger, new_request_id
 from bot.orders import place_limit_order, place_market_order, place_stop_limit_order
 from bot.services import fetch_balances, fetch_positions, fetch_order_history
 from bot.validators import ValidationError, validate_all
@@ -168,6 +168,7 @@ def _print_response(resp: dict):
     ))
 
 def screen_place_order(client: BinanceClient):
+    new_request_id()
     console.print()
     _divider("NEW ORDER")
     console.print()
@@ -178,7 +179,7 @@ def screen_place_order(client: BinanceClient):
 
     symbol = _field_loop("Symbol", converter=lambda s: s.upper().strip(), validate=_val_symbol)
     side   = _pick("Side", ["BUY", "SELL"])
-    order_type = _pick("Order Type", ["MARKET", "LIMIT", "STOP-LIMIT"])
+    order_type = _pick("Order Type", ["MARKET", "LIMIT"])
 
     def _val_qty(v: float):
         if v <= 0:
@@ -192,15 +193,6 @@ def screen_place_order(client: BinanceClient):
             if v <= 0: raise ValidationError("Price must be > 0")
         price = _field_loop("Limit Price", converter=float, validate=_val_price)
 
-    elif order_type == "STOP-LIMIT":
-        def _val_stop(v: float):
-            if v <= 0: raise ValidationError("Stop price must be > 0")
-        stop_price = _field_loop("Stop Price  [dim](trigger)[/]", converter=float, validate=_val_stop)
-        def _val_limit(v: float):
-            if v <= 0: raise ValidationError("Limit price must be > 0")
-        price = _field_loop("Limit Price [dim](fill after trigger)[/]", converter=float, validate=_val_limit)
-
-    _print_request(symbol, side, order_type, quantity, price, stop_price)
     console.print()
 
     confirm = _pick("Submit order?", ["Yes — send it", "No — cancel"])
@@ -216,8 +208,6 @@ def screen_place_order(client: BinanceClient):
             resp = place_market_order(client, symbol, side, quantity)
         elif order_type == "LIMIT":
             resp = place_limit_order(client, symbol, side, quantity, price)
-        else:
-            resp = place_stop_limit_order(client, symbol, side, quantity, price, stop_price)
         _print_response(resp)
     except BinanceAPIError as e:
         logger.debug("TUI order failed: code=%s msg=%s", e.code, e.msg)
@@ -230,12 +220,13 @@ def screen_place_order(client: BinanceClient):
 
 
 def screen_wallet(client: BinanceClient):
+    new_request_id()
     console.print()
     _divider("WALLET BALANCE")
     console.print()
 
     try:
-        data = client.get_account()
+        data = client.get_account(context="wallet-view")
     except BinanceAPIError as e:
         console.print(Panel(_friendly(e), border_style="red"))
         return
@@ -261,12 +252,13 @@ def screen_wallet(client: BinanceClient):
     console.print(t)
 
 def screen_positions(client: BinanceClient):
+    new_request_id()
     console.print()
     _divider("OPEN POSITIONS")
     console.print()
 
     try:
-        data = client.get_account()
+        data = client.get_account(context="positions-view")
     except BinanceAPIError as e:
         console.print(Panel(_friendly(e), border_style="red"))
         return
@@ -299,6 +291,7 @@ def screen_positions(client: BinanceClient):
     console.print(t)
 
 def screen_history(client: BinanceClient):
+    new_request_id()
     console.print()
     _divider("ORDER HISTORY")
     console.print()

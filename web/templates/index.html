@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MOCKANCE · Futures Terminal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="app">
+
+    <aside class="sidebar">
+      <div class="logo">
+        <span class="logo-mark">M</span>
+        <span class="logo-text">MOCKANCE</span>
+      </div>
+      <nav class="nav">
+        <button class="nav-item active" data-view="trade">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M8 2l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Trade
+        </button>
+        <button class="nav-item" data-view="wallet">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="4" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M1 7h14M11 11h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M4 4V3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="1.5"/></svg>
+          Wallet
+        </button>
+        <button class="nav-item" data-view="positions">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 12l4-4 3 3 5-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Positions
+        </button>
+        <button class="nav-item" data-view="history">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          History
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="status-dot"></div>
+        <span class="status-label">demo-fapi.binance.com</span>
+      </div>
+    </aside>
+
+    <main class="main">
+
+        <div class="view active" id="view-trade">
+        <header class="view-header">
+          <h1>Place Order</h1>
+          <span class="testnet-badge">TESTNET</span>
+        </header>
+
+        <div class="trade-grid">
+          <form class="order-form card" id="order-form" autocomplete="off">
+
+            <div class="form-group">
+              <label>Symbol</label>
+              <input type="text" id="symbol" placeholder="BTCUSDT" value="BTCUSDT" spellcheck="false" />
+            </div>
+
+            <div class="form-group">
+              <label>Side</label>
+              <div class="toggle-group" id="side-toggle">
+                <button type="button" class="toggle-btn active buy" data-val="BUY">Buy</button>
+                <button type="button" class="toggle-btn sell" data-val="SELL">Sell</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Order Type</label>
+              <div class="toggle-group" id="type-toggle">
+                <button type="button" class="toggle-btn active" data-val="MARKET">Market</button>
+                <button type="button" class="toggle-btn" data-val="LIMIT">Limit</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Quantity</label>
+              <input type="number" id="quantity" placeholder="0.001" step="any" min="0" />
+            </div>
+
+            <div class="form-group conditional" id="field-price">
+              <label>Limit Price <span class="label-hint">USDT</span></label>
+              <input type="number" id="price" placeholder="0.00" step="any" min="0" />
+            </div>
+
+            <div class="form-group dry-run-row">
+              <label class="checkbox-label">
+                <input type="checkbox" id="dry-run" />
+                <span>Dry run</span>
+              </label>
+            </div>
+
+            <div id="form-error" class="form-error hidden"></div>
+
+            <button type="submit" class="submit-btn" id="submit-btn">
+              <span class="btn-text">Submit Order</span>
+              <span class="btn-loader hidden"></span>
+            </button>
+          </form>
+
+          <div class="order-result card" id="order-result">
+            <div class="result-empty">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="1.5" opacity=".3"/><path d="M16 10v6M16 20v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".5"/></svg>
+              <p>Order result will appear here</p>
+            </div>
+            <div class="result-content hidden" id="result-content"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="view" id="view-wallet">
+        <header class="view-header">
+          <h1>Wallet</h1>
+          <button class="refresh-btn" id="refresh-wallet">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M12 7A5 5 0 1 1 7 2M12 2v4H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Refresh
+          </button>
+        </header>
+
+        <div class="summary-row" id="wallet-summary"></div>
+        <div class="card table-card" id="wallet-table-wrap">
+          <div class="loading-state">Loading…</div>
+        </div>
+      </div>
+
+      <div class="view" id="view-positions">
+        <header class="view-header">
+          <h1>Open Positions</h1>
+          <button class="refresh-btn" id="refresh-positions">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M12 7A5 5 0 1 1 7 2M12 2v4H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Refresh
+          </button>
+        </header>
+        <div class="card table-card" id="positions-table-wrap">
+          <div class="loading-state">Loading…</div>
+        </div>
+      </div>
+
+      <div class="view" id="view-history">
+        <header class="view-header">
+          <h1>Order History</h1>
+        </header>
+        <div class="history-controls card">
+          <input type="text" id="history-symbol" placeholder="BTCUSDT" value="BTCUSDT" spellcheck="false" />
+          <select id="history-limit">
+            <option value="10">Last 10</option>
+            <option value="25">Last 25</option>
+            <option value="50">Last 50</option>
+          </select>
+          <button id="history-fetch" class="fetch-btn">Fetch</button>
+        </div>
+        <div class="card table-card" id="history-table-wrap">
+          <div class="empty-state">Enter a symbol and press Fetch</div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="/static/main.js"></script>
+</body>
+</html>

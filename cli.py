@@ -11,7 +11,7 @@ from rich.text import Text
 from typing import Optional
 
 from bot.client import BinanceAPIError, BinanceClient
-from bot.logging_config import get_logger
+from bot.logging_config import get_logger, new_request_id
 from bot.orders import place_limit_order, place_market_order, place_stop_limit_order
 from bot.services import fetch_order_history, fetch_balances, fetch_positions
 from bot.validators import ValidationError, validate_all
@@ -126,7 +126,6 @@ def main(ctx: typer.Context):
         examples = [
             ("Market order",     "python cli.py place-order --symbol BTCUSDT --side BUY --order-type MARKET --quantity 0.01"),
             ("Limit order",      "python cli.py place-order --symbol BTCUSDT --side SELL --order-type LIMIT --quantity 0.01 --price 95000"),
-            ("Stop-Limit order", "python cli.py place-order --symbol BTCUSDT --side SELL --order-type STOP-LIMIT --quantity 0.01 --stop-price 90000 --price 89500"),
             ("Account balance",  "python cli.py balance"),
             ("Full help",        "python cli.py place-order --help"),
         ]
@@ -138,15 +137,12 @@ def main(ctx: typer.Context):
 def place_order(
     symbol:     str             = typer.Option(...,  help="Trading pair, e.g. BTCUSDT"),
     side:       str             = typer.Option(...,  help="BUY or SELL"),
-    order_type: str             = typer.Option(...,  "--order-type", help="MARKET, LIMIT, or STOP-LIMIT"),
+    order_type: str             = typer.Option(...,  "--order-type", help="MARKET or LIMIT"),
     quantity:   float           = typer.Option(...,  help="Quantity in base asset"),
-    price:      Optional[float] = typer.Option(None, help="Limit price — required for LIMIT and STOP-LIMIT"),
-    stop_price: Optional[float] = typer.Option(None, "--stop-price", help="Trigger price — required for STOP-LIMIT"),
+    price:      Optional[float] = typer.Option(None, help="Limit price — required for LIMIT"),
     dry_run:    bool            = typer.Option(False, "--dry-run", help="Simulate order without sending to exchange"),
 ):
-    """Place a MARKET, LIMIT, or STOP-LIMIT order.
-    Includes risk guard and dry-run support."""
-    
+    new_request_id()
     logger.info("CLI: place-order symbol=%s side=%s type=%s qty=%s price=%s stop=%s",
                 symbol, side, order_type, quantity, price, stop_price)
 
@@ -163,7 +159,7 @@ def place_order(
         raise typer.Exit(1)
     print_request(symbol, side, order_type, quantity, price, stop_price)
     try:
-        account = client.get_account()
+        account = client.get_account(context="risk-check")
         available_balance = float(account.get("availableBalance", 0))
 
         est_price = price if price else 60000
@@ -204,8 +200,6 @@ def place_order(
             resp = place_market_order(client, symbol, side, quantity)
         elif order_type == "LIMIT":
             resp = place_limit_order(client, symbol, side, quantity, price)
-        else:
-            resp = place_stop_limit_order(client, symbol, side, quantity, price, stop_price)
 
         print_response(resp)
 
@@ -223,10 +217,10 @@ def place_order(
 
 @app.command("balance")
 def show_balance():
-    """Show Demo Futures account balances."""
+    new_request_id()
     client = get_client()
     try:
-        data = client.get_account()
+        data = client.get_account(context="balance-view")
     except BinanceAPIError as e:
         console.print(Panel(f"[red]Error {e.code}:[/] {e.msg}", border_style="red",
                             box=box.HEAVY, title="[bold red]ERROR[/]", title_align="left"))
@@ -260,7 +254,7 @@ def order_history(
     symbol: str = typer.Option(..., help="Trading pair, e.g. BTCUSDT"),
     limit: int = typer.Option(10, help="Number of recent orders"),
 ):
-    """View recent order history for a symbol."""
+    new_request_id()
     client = get_client()
 
     try:
@@ -295,11 +289,11 @@ def order_history(
 
 @app.command("positions")
 def show_positions():
-    """Show open futures positions."""
+    new_request_id()
     client = get_client()
 
     try:
-        data = client.get_account()
+        data = client.get_account(context="positions-view")
     except BinanceAPIError as e:
         console.print(f"[red]Error {e.code}: {e.msg}[/]")
         raise typer.Exit(1)

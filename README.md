@@ -1,7 +1,7 @@
 # Mockance — Binance Futures Demo Trading Bot
 
-Mockance is a command-line trading bot for Binance USDT-M Futures (Demo Trading environment) built with Python.
-It supports Market, Limit, and Stop-Limit orders with both an interactive TUI and a flag-based CLI.
+Mockance is a command-line and web trading bot for Binance USDT-M Futures (Demo Trading environment) built with Python.
+It supports Market and Limitorders with an interactive TUI, a flag-based CLI, and a browser-based web terminal.
 
 **Note on Testnet Migration**
 Binance Futures Testnet has been migrated to a Demo Trading environment.
@@ -24,6 +24,13 @@ trading_bot/
 │   ├── validators.py      # Input validation
 │   ├── services.py        # Shared data layer (balances, positions, history)
 │   └── logging_config.py  # Rotating file + console logger
+├── web/
+│   ├── app.py             # Flask server + JSON API routes
+│   ├── templates/
+│   │   └── index.html     # Single-page web terminal
+│   └── static/
+│       ├── style.css  # Dark terminal theme
+│       └── app.js      # UI logic (nav, forms, fetch)
 ├── cli.py                 # CLI entry point
 ├── tui.py                 # Interactive TUI
 ├── logs/
@@ -61,7 +68,16 @@ BINANCE_API_SECRET=your_api_secret_here
 
 ## Running the Bot
 
-### Interactive mode
+### Web terminal (browser UI)
+
+```bash
+pip install flask
+python web/app.py
+```
+
+Then open http://localhost:5000
+
+### Interactive TUI
 
 ```bash
 python cli.py
@@ -72,6 +88,27 @@ python cli.py
 ```bash
 python tui.py
 ```
+
+## Web Terminal
+
+The web interface is a single-page browser terminal with four views:
+
+- **Trade** — Place Market and Limit orders with side/type toggles, conditional price fields, dry-run mode, and a live confirmation panel
+- **Wallet** — Summary cards (total balance, available, unrealized PnL) and a per-asset breakdown table
+- **Positions** — Open futures positions with size, entry price, and color-coded PnL
+- **History** — Order history by symbol with configurable limit and status tags (FILLED / NEW / CANCELED)
+
+The Flask server at `web/app.py` imports directly from the `bot/` package, so all validation and order logic is shared with the CLI and TUI.
+
+### Web API routes
+
+| Method | Route | Description |
+| ------ | ----- | ----------- |
+| GET | `/` | Web terminal UI |
+| GET | `/api/balances` | Account summary and asset balances |
+| GET | `/api/positions` | Open futures positions |
+| GET | `/api/history?symbol=BTCUSDT&limit=10` | Recent order history |
+| POST | `/api/order` | Place a new order |
 
 ## CLI Commands
 
@@ -85,12 +122,6 @@ python cli.py place-order --symbol BTCUSDT --side BUY --order-type MARKET --quan
 
 ```bash
 python cli.py place-order --symbol BTCUSDT --side SELL --order-type LIMIT --quantity 0.01 --price 95000
-```
-
-### Stop-Limit order
-
-```bash
-python cli.py place-order --symbol BTCUSDT --side SELL --order-type STOP-LIMIT --quantity 0.01 --stop-price 90000 --price 89500
 ```
 
 ### Dry run (simulation mode)
@@ -113,15 +144,11 @@ python cli.py balance
 python cli.py positions
 ```
 
-Shows active futures positions.
-
 ### Trade history
 
 ```bash
 python cli.py history --symbol BTCUSDT --limit 10
 ```
-
-Displays recent orders for a given symbol.
 
 ### CLI Help
 
@@ -132,8 +159,9 @@ python cli.py place-order --help
 
 ## Features
 
-* Market, Limit, and Stop-Limit orders
+* Market and Limit
 * BUY and SELL support
+* Browser-based web terminal (Flask)
 * CLI and interactive TUI interface
 * Structured architecture (client, orders, validation, services separation)
 * Logging with rotating file support
@@ -151,7 +179,7 @@ Before placing an order, Mockance estimates trade size relative to available bal
 
 * Warns if trade uses more than 50 percent of balance
 * Requires confirmation if above 80 percent
-* Helps prevent accidental large positions
+* Applies in both the CLI and web terminal
 
 ## Futures Trading Note
 
@@ -160,7 +188,7 @@ In USDT-M Futures:
 * You do not own assets like BTC or ETH
 * Trades create positions instead of wallet holdings
 * Balance remains in USDT
-* Use `positions` command to view active trades
+* Use the Positions view or `positions` command to view active trades
 
 ## Logging
 
@@ -174,6 +202,8 @@ logs/bot.log
 | ----------- | ----- |
 | Console     | INFO  |
 | File        | DEBUG |
+
+All three interfaces (web, CLI, TUI) write to the same log file.
 
 ## Error Handling
 
@@ -200,6 +230,7 @@ python-dotenv
 rich
 typer
 urllib3
+flask
 ```
 
 ## Assumptions
@@ -207,7 +238,6 @@ urllib3
 * USDT-M Futures only
 * Demo Trading API is used
 * Orders use GTC where applicable
-* Stop-Limit implemented via Binance Futures STOP type
 
 ## Summary
 
@@ -215,7 +245,7 @@ Mockance demonstrates:
 
 * Clean API client design
 * Structured backend architecture with separation of concerns
-* Shared service layer for reusable logic
+* Shared service layer reused across web, CLI, and TUI
 * Robust error handling and logging
 * Practical understanding of futures trading systems
 * Safe execution practices through validation and risk control
