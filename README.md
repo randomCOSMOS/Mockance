@@ -71,7 +71,6 @@ BINANCE_API_SECRET=your_api_secret_here
 ### Web terminal (browser UI)
 
 ```bash
-pip install flask
 python web/app.py
 ```
 
