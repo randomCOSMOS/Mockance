@@ -29,8 +29,8 @@ trading_bot/
 │   ├── templates/
 │   │   └── index.html     # Single-page web terminal
 │   └── static/
-│       ├── style.css  # Dark terminal theme
-│       └── app.js      # UI logic (nav, forms, fetch)
+│       ├── style.css      # Dark terminal theme
+│       └── app.js         # UI logic (nav, forms, fetch)
 ├── cli.py                 # CLI entry point
 ├── tui.py                 # Interactive TUI
 ├── logs/
