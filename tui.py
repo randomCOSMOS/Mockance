@@ -1,8 +1,3 @@
-"""
-tui.py — Interactive TUI for the Binance Futures Trading Bot.
-Run:  python tui.py   or   python cli.py  (mode picker)
-"""
-
 import os
 import sys
 
@@ -18,14 +13,13 @@ from rich.text import Text
 from bot.client import BinanceAPIError, BinanceClient
 from bot.logging_config import get_logger
 from bot.orders import place_limit_order, place_market_order, place_stop_limit_order
+from bot.services import fetch_balances, fetch_positions, fetch_order_history
 from bot.validators import ValidationError, validate_all
 
 load_dotenv()
 console = Console()
 logger = get_logger("bot.tui")
 
-# ── Palette ────────────────────────────────────────────────────────────────────
-# One amber accent throughout. Green/red only for buy/sell and PnL.
 ACCENT   = "bold yellow"
 DIM      = "dim white"
 BORDER   = "yellow"
@@ -33,8 +27,6 @@ BUY_COL  = "bold green"
 SELL_COL = "bold red"
 MUTED    = "grey62"
 
-
-# ── Friendly error map ─────────────────────────────────────────────────────────
 _ERROR_HINTS: dict[int, str] = {
     -1121: (
         "Symbol not found on testnet.\n"
@@ -64,8 +56,6 @@ def _friendly(e: BinanceAPIError) -> str:
         hint = None
     return f"[bold]Error {e.code}[/]\n\n{hint}" if hint else f"[bold]Error {e.code}:[/] {e.msg}"
 
-
-# ── ASCII banner ───────────────────────────────────────────────────────────────
 _LOGO = """\
 ███╗   ███╗ ██████╗  ██████╗██╗  ██╗ █████╗ ███╗   ██╗ ██████╗███████╗
 ████╗ ████║██╔═══██╗██╔════╝██║ ██╔╝██╔══██╗████╗  ██║██╔════╝██╔════╝
@@ -86,9 +76,6 @@ def _header():
         box=box.HEAVY,
     ))
     console.print()
-
-
-# ── Core UI helpers ────────────────────────────────────────────────────────────
 
 def _divider(label: str = ""):
     console.print(Rule(f"[{MUTED}]{label}[/]", style="yellow", align="left"))
@@ -125,9 +112,6 @@ def _field_loop(prompt: str, *, converter=str, validate=None):
             return value
         except (ValueError, ValidationError) as e:
             console.print(f"  [red]✗[/] {e}")
-
-
-# ── Order preview / response tables ───────────────────────────────────────────
 
 def _print_request(symbol, side, order_type, quantity, price=None, stop_price=None):
     t = Table(box=box.SIMPLE_HEAVY, border_style="yellow", show_lines=False,
@@ -182,9 +166,6 @@ def _print_response(resp: dict):
         f"[bold green]ORDER SUBMITTED[/]  [dim]#{resp.get('orderId')}[/]",
         border_style="green", box=box.HEAVY, padding=(0, 2)
     ))
-
-
-# ── Screens ────────────────────────────────────────────────────────────────────
 
 def screen_place_order(client: BinanceClient):
     console.print()
@@ -248,45 +229,117 @@ def screen_place_order(client: BinanceClient):
         logger.exception("TUI unexpected error")
 
 
-def screen_balance(client: BinanceClient):
+def screen_wallet(client: BinanceClient):
     console.print()
-    _divider("ACCOUNT BALANCE")
+    _divider("WALLET BALANCE")
     console.print()
 
     try:
         data = client.get_account()
     except BinanceAPIError as e:
-        logger.debug("Balance fetch failed: code=%s msg=%s", e.code, e.msg)
-        console.print(Panel(_friendly(e), border_style="red", box=box.HEAVY, padding=(1, 2)))
+        console.print(Panel(_friendly(e), border_style="red"))
         return
 
-    assets = [a for a in data.get("assets", []) if float(a.get("walletBalance", 0)) > 0]
+    assets = fetch_balances(client)
+
     if not assets:
-        console.print(Panel(f"[{MUTED}]No assets with non-zero balance.[/]",
-                            border_style="yellow", box=box.HEAVY))
+        console.print("[yellow]No assets with non-zero balance.[/]")
         return
 
-    t = Table(box=box.SIMPLE_HEAVY, border_style="yellow", show_lines=False,
-              title=f"[{MUTED}]TESTNET ACCOUNT[/]", title_justify="left",
-              title_style="dim", padding=(0, 2))
-    t.add_column("ASSET",   header_style=MUTED, style="bold white")
-    t.add_column("WALLET",  justify="right", header_style=MUTED, style="white")
-    t.add_column("AVAIL",   justify="right", header_style=MUTED, style="white")
-    t.add_column("UNREAL PNL", justify="right", header_style=MUTED)
+    t = Table(box=box.SIMPLE_HEAVY, border_style="yellow")
+    t.add_column("ASSET")
+    t.add_column("WALLET", justify="right")
+    t.add_column("AVAILABLE", justify="right")
 
     for a in assets:
-        pnl = float(a.get("unrealizedProfit", 0))
-        pnl_fmt = f"[green]+{pnl:.4f}[/]" if pnl >= 0 else f"[red]{pnl:.4f}[/]"
-        t.add_row(a["asset"],
-                  a.get("walletBalance",    "0"),
-                  a.get("availableBalance", "0"),
-                  pnl_fmt)
+        t.add_row(
+            a["asset"],
+            a.get("walletBalance", "0"),
+            a.get("availableBalance", "0"),
+        )
+
     console.print(t)
 
+def screen_positions(client: BinanceClient):
+    console.print()
+    _divider("OPEN POSITIONS")
+    console.print()
 
-# ── Main loop ──────────────────────────────────────────────────────────────────
+    try:
+        data = client.get_account()
+    except BinanceAPIError as e:
+        console.print(Panel(_friendly(e), border_style="red"))
+        return
 
-MENU = ["Place Order", "Account Balance", "Exit"]
+    positions = fetch_positions(client)
+
+    if not positions:
+        console.print("[yellow]No open positions.[/]")
+        return
+
+    t = Table(box=box.SIMPLE_HEAVY, border_style="green")
+    t.add_column("SYMBOL")
+    t.add_column("SIZE", justify="right")
+    t.add_column("ENTRY", justify="right")
+    t.add_column("PNL", justify="right")
+
+    for p in positions:
+        size = float(p["positionAmt"])
+        pnl = float(p["unrealizedProfit"])
+
+        pnl_fmt = f"[green]{pnl:.4f}[/]" if pnl >= 0 else f"[red]{pnl:.4f}[/]"
+
+        t.add_row(
+            p["symbol"],
+            f"{size:.4f}",
+            p["entryPrice"],
+            pnl_fmt,
+        )
+
+    console.print(t)
+
+def screen_history(client: BinanceClient):
+    console.print()
+    _divider("ORDER HISTORY")
+    console.print()
+
+    symbol = _ask("Symbol (e.g. BTCUSDT)").upper().strip()
+
+    if not symbol:
+        console.print("[red]Please enter a trading pair.[/]")
+        return
+
+    try:
+        orders = fetch_order_history(client, symbol, 10)
+    except BinanceAPIError as e:
+        console.print(Panel(_friendly(e), border_style="red"))
+        return
+
+    if not orders:
+        console.print("[yellow]No orders found.[/]")
+        return
+
+    t = Table(box=box.SIMPLE_HEAVY, border_style="yellow")
+    t.add_column("ID")
+    t.add_column("SIDE")
+    t.add_column("TYPE")
+    t.add_column("STATUS")
+    t.add_column("QTY")
+    t.add_column("PRICE")
+
+    for o in orders[::-1]:
+        t.add_row(
+            str(o["orderId"]),
+            o["side"],
+            o["type"],
+            o["status"],
+            o["origQty"],
+            o["price"],
+        )
+
+    console.print(t)
+
+MENU = ["Place Order", "Wallet Balance", "Open Positions", "Order History", "Exit"]
 
 def tui_main():
     _header()
@@ -299,8 +352,12 @@ def tui_main():
 
         if choice == "Place Order":
             screen_place_order(client)
-        elif choice == "Account Balance":
-            screen_balance(client)
+        elif choice == "Wallet Balance":
+            screen_wallet(client)
+        elif choice == "Order History":
+            screen_history(client)
+        elif choice == "Open Positions":
+            screen_positions(client)
         elif choice == "Exit":
             console.print(Panel(f"[{MUTED}]Session closed.[/]",
                                 border_style="yellow", box=box.HEAVY, padding=(0, 2)))

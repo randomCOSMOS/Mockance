@@ -13,13 +13,11 @@ logger = get_logger("bot.client")
 
 BASE_URL = "https://demo-fapi.binance.com"
 
-
 class BinanceAPIError(Exception):
     def __init__(self, code, msg):
         self.code = code
         self.msg = msg
         super().__init__(f"[{code}] {msg}")
-
 
 class BinanceClient:
     def __init__(self, api_key: str, api_secret: str):

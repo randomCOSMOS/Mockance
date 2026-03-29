@@ -4,15 +4,12 @@ from bot.logging_config import get_logger
 
 logger = get_logger("bot.orders")
 
-_POLL_INTERVAL = 1      # seconds between status checks
-_POLL_ATTEMPTS = 8      # give up after ~8 seconds
+_POLL_INTERVAL = 1   
+_POLL_ATTEMPTS = 8     
 
 
 def _poll_until_filled(client: BinanceClient, symbol: str, order_id: int) -> dict:
-    """
-    Poll GET /fapi/v1/order until status == FILLED or attempts exhausted.
-    Returns the last known order dict either way.
-    """
+
     for attempt in range(1, _POLL_ATTEMPTS + 1):
         time.sleep(_POLL_INTERVAL)
         order = client.get_order(symbol=symbol, order_id=order_id)
@@ -35,7 +32,6 @@ def place_market_order(client: BinanceClient, symbol, side, quantity):
     order_id = resp.get("orderId")
     logger.info("Market order submitted | id=%s status=%s", order_id, resp.get("status"))
 
-    # Testnet matching engine is slow — poll for real fill data
     filled = _poll_until_filled(client, symbol, order_id)
     logger.info("Market order result   | id=%s status=%s executedQty=%s avgPrice=%s",
                 filled.get("orderId"), filled.get("status"),
@@ -57,19 +53,11 @@ def place_limit_order(client: BinanceClient, symbol, side, quantity, price):
     return resp
 
 def estimate_notional(quantity: float, price: float | None, fallback_price: float = 60000):
-    """
-    Rough notional estimate.
-    Uses provided price or fallback (approx BTC price if MARKET).
-    """
     p = price if price else fallback_price
     return quantity * p
 
 
 def place_stop_limit_order(client: BinanceClient, symbol, side, quantity, price, stop_price):
-    """
-    Stop-Limit order: triggers at `stop_price`, then places a limit at `price`.
-    Uses STOP type on Binance Futures (not STOP_LOSS_LIMIT which is spot-only).
-    """
     resp = client.place_order(
         symbol=symbol,
         side=side,

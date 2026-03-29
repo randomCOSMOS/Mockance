@@ -13,6 +13,7 @@ from typing import Optional
 from bot.client import BinanceAPIError, BinanceClient
 from bot.logging_config import get_logger
 from bot.orders import place_limit_order, place_market_order, place_stop_limit_order
+from bot.services import fetch_order_history, fetch_balances, fetch_positions
 from bot.validators import ValidationError, validate_all
 
 load_dotenv()
@@ -24,7 +25,6 @@ app = typer.Typer(
 console = Console()
 logger = get_logger("bot.cli")
 
-# ── Palette (matches tui.py) ───────────────────────────────────────────────────
 ACCENT   = "bold yellow"
 DIM      = "dim white"
 MUTED    = "grey62"
@@ -49,9 +49,6 @@ def _banner():
         border_style="yellow", padding=(0, 6), box=box.HEAVY,
     ))
     console.print()
-
-
-# ── Shared helpers ─────────────────────────────────────────────────────────────
 
 def get_client():
     key    = os.getenv("BINANCE_API_KEY", "").strip()
@@ -106,9 +103,6 @@ def print_response(resp: dict):
         border_style="green", box=box.HEAVY, padding=(0, 2),
     ))
 
-
-# ── Bare launch: mode picker ───────────────────────────────────────────────────
-
 @app.callback(invoke_without_command=True)
 def main(ctx: typer.Context):
     if ctx.invoked_subcommand is not None:
@@ -140,9 +134,6 @@ def main(ctx: typer.Context):
             console.print(f"  [{MUTED}]{label}[/]")
             console.print(f"  [bold white]{cmd}[/]\n")
 
-
-# ── place-order ────────────────────────────────────────────────────────────────
-
 @app.command("place-order")
 def place_order(
     symbol:     str             = typer.Option(...,  help="Trading pair, e.g. BTCUSDT"),
@@ -161,7 +152,6 @@ def place_order(
 
     client = get_client()
 
-    # ── Validation ─────────────────────────────────────────────
     try:
         symbol, side, order_type, quantity, price, stop_price = validate_all(
             symbol, side, order_type, quantity, price, stop_price
@@ -171,16 +161,11 @@ def place_order(
                             title="[bold red]VALIDATION ERROR[/]", title_align="left"))
         logger.error("Validation failed: %s", e)
         raise typer.Exit(1)
-
-    # ── Order Preview ─────────────────────────────────────────
     print_request(symbol, side, order_type, quantity, price, stop_price)
-
-    # ── Risk Guard ────────────────────────────────────────────
     try:
         account = client.get_account()
         available_balance = float(account.get("availableBalance", 0))
 
-        # Rough estimate (fallback price for MARKET)
         est_price = price if price else 60000
         notional = quantity * est_price
 
@@ -205,7 +190,6 @@ def place_order(
     except Exception as e:
         logger.warning("Risk check skipped: %s", e)
 
-    # ── Dry Run ───────────────────────────────────────────────
     if dry_run:
         console.print(Panel(
             "[bold yellow]DRY RUN[/]\nOrder validated successfully.\nNo request was sent to Binance.",
@@ -214,8 +198,7 @@ def place_order(
         ))
         logger.info("Dry run executed — no API call made")
         raise typer.Exit(0)
-
-    # ── Execution ─────────────────────────────────────────────
+    
     try:
         if order_type == "MARKET":
             resp = place_market_order(client, symbol, side, quantity)
@@ -238,8 +221,6 @@ def place_order(
         logger.exception("Unexpected error")
         raise typer.Exit(1)
 
-# ── balance ────────────────────────────────────────────────────────────────────
-
 @app.command("balance")
 def show_balance():
     """Show Demo Futures account balances."""
@@ -251,7 +232,7 @@ def show_balance():
                             box=box.HEAVY, title="[bold red]ERROR[/]", title_align="left"))
         raise typer.Exit(1)
 
-    assets = [a for a in data.get("assets", []) if float(a.get("walletBalance", 0)) > 0]
+    assets = fetch_balances(client)
     if not assets:
         console.print(Panel(f"[{MUTED}]No assets with non-zero balance.[/]",
                             border_style="yellow", box=box.HEAVY))
@@ -283,7 +264,7 @@ def order_history(
     client = get_client()
 
     try:
-        orders = client.get_all_orders(symbol=symbol.upper(), limit=limit)
+        orders = fetch_order_history(client, symbol, limit)
     except BinanceAPIError as e:
         console.print(Panel(f"[red]Error {e.code}:[/] {e.msg}", border_style="red"))
         raise typer.Exit(1)
@@ -308,6 +289,42 @@ def order_history(
             o["status"],
             o["origQty"],
             o["price"],
+        )
+
+    console.print(t)
+
+@app.command("positions")
+def show_positions():
+    """Show open futures positions."""
+    client = get_client()
+
+    try:
+        data = client.get_account()
+    except BinanceAPIError as e:
+        console.print(f"[red]Error {e.code}: {e.msg}[/]")
+        raise typer.Exit(1)
+
+    positions = fetch_positions(client)
+
+    if not positions:
+        console.print("[yellow]No open positions.[/]")
+        return
+
+    t = Table(title="Open Positions", border_style="yellow")
+    t.add_column("SYMBOL")
+    t.add_column("SIZE")
+    t.add_column("ENTRY")
+    t.add_column("PNL")
+
+    for p in positions:
+        pnl = float(p["unrealizedProfit"])
+        pnl_fmt = f"[green]{pnl:.4f}[/]" if pnl >= 0 else f"[red]{pnl:.4f}[/]"
+
+        t.add_row(
+            p["symbol"],
+            p["positionAmt"],
+            p["entryPrice"],
+            pnl_fmt,
         )
 
     console.print(t)

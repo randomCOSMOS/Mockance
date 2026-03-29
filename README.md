@@ -3,7 +3,15 @@
 Mockance is a command-line trading bot for Binance USDT-M Futures (Demo Trading environment) built with Python.
 It supports Market, Limit, and Stop-Limit orders with both an interactive TUI and a flag-based CLI.
 
----
+**Note on Testnet Migration**
+Binance Futures Testnet has been migrated to a Demo Trading environment.
+Older endpoints such as `testnet.binancefuture.com` are deprecated.
+
+This project uses the current official API endpoint:
+
+```
+https://demo-fapi.binance.com
+```
 
 ## Project Structure
 
@@ -14,6 +22,7 @@ trading_bot/
 │   ├── client.py          # Binance REST client (signing, retries, error handling)
 │   ├── orders.py          # Order placement logic + fill polling
 │   ├── validators.py      # Input validation
+│   ├── services.py        # Shared data layer (balances, positions, history)
 │   └── logging_config.py  # Rotating file + console logger
 ├── cli.py                 # CLI entry point
 ├── tui.py                 # Interactive TUI
@@ -23,8 +32,6 @@ trading_bot/
 ├── requirements.txt
 └── README.md
 ```
-
----
 
 ## Setup
 
@@ -36,16 +43,12 @@ cd trading_bot
 pip install -r requirements.txt
 ```
 
----
-
 ### 2. Create a Binance Demo Trading account
 
 1. Go to: https://www.binance.com/en/futures/demo
 2. Enable Demo Trading
 3. Generate API keys
 4. Copy API Key and Secret
-
----
 
 ### 3. Configure credentials
 
@@ -55,20 +58,6 @@ Create a `.env` file:
 BINANCE_API_KEY=your_api_key_here
 BINANCE_API_SECRET=your_api_secret_here
 ```
-
----
-
-## API Endpoint
-
-Binance has migrated Futures Testnet to Demo Trading.
-
-This project uses:
-
-```
-https://demo-fapi.binance.com
-```
-
----
 
 ## Running the Bot
 
@@ -84,8 +73,6 @@ python cli.py
 python tui.py
 ```
 
----
-
 ## CLI Commands
 
 ### Market order
@@ -94,15 +81,11 @@ python tui.py
 python cli.py place-order --symbol BTCUSDT --side BUY --order-type MARKET --quantity 0.01
 ```
 
----
-
 ### Limit order
 
 ```bash
 python cli.py place-order --symbol BTCUSDT --side SELL --order-type LIMIT --quantity 0.01 --price 95000
 ```
-
----
 
 ### Stop-Limit order
 
@@ -110,25 +93,27 @@ python cli.py place-order --symbol BTCUSDT --side SELL --order-type LIMIT --quan
 python cli.py place-order --symbol BTCUSDT --side SELL --order-type STOP-LIMIT --quantity 0.01 --stop-price 90000 --price 89500
 ```
 
----
-
 ### Dry run (simulation mode)
 
 ```bash
 python cli.py place-order --symbol BTCUSDT --side BUY --order-type MARKET --quantity 0.01 --dry-run
 ```
 
-Simulates the order without sending it to Binance. Useful for validation and testing.
+Simulates the order without sending it to Binance.
 
----
-
-### Account balance
+### Wallet balance
 
 ```bash
 python cli.py balance
 ```
 
----
+### Open positions
+
+```bash
+python cli.py positions
+```
+
+Shows active futures positions.
 
 ### Trade history
 
@@ -138,8 +123,6 @@ python cli.py history --symbol BTCUSDT --limit 10
 
 Displays recent orders for a given symbol.
 
----
-
 ### CLI Help
 
 ```bash
@@ -147,23 +130,20 @@ python cli.py --help
 python cli.py place-order --help
 ```
 
----
-
 ## Features
 
 * Market, Limit, and Stop-Limit orders
 * BUY and SELL support
 * CLI and interactive TUI interface
-* Structured architecture (client, orders, validation separation)
+* Structured architecture (client, orders, validation, services separation)
 * Logging with rotating file support
 * Retry handling for network failures
 * Input validation with clear error messages
 * Order preview before execution
 * Dry-run mode for safe simulation
 * Trade history viewer
+* Open positions tracking
 * Risk guard for high-exposure trades
-
----
 
 ## Risk Guard
 
@@ -173,7 +153,14 @@ Before placing an order, Mockance estimates trade size relative to available bal
 * Requires confirmation if above 80 percent
 * Helps prevent accidental large positions
 
----
+## Futures Trading Note
+
+In USDT-M Futures:
+
+* You do not own assets like BTC or ETH
+* Trades create positions instead of wallet holdings
+* Balance remains in USDT
+* Use `positions` command to view active trades
 
 ## Logging
 
@@ -188,20 +175,15 @@ logs/bot.log
 | Console     | INFO  |
 | File        | DEBUG |
 
----
-
 ## Error Handling
 
 Handles:
 
-* Invalid symbols
-* Incorrect parameters
-* Insufficient margin
-* Exchange constraints (precision, min notional)
+* Invalid inputs with user-friendly messages
+* Exchange rejections (invalid symbol, insufficient balance, etc.)
 * Network failures with retries
 * Missing credentials
-
----
+* Unexpected runtime errors
 
 ## Demo Trading Notes
 
@@ -209,8 +191,6 @@ Handles:
 * The bot polls order status for accurate execution details
 * Demo trading has stricter limits than mainnet
 * Use small quantities for testing
-
----
 
 ## Requirements
 
@@ -222,8 +202,6 @@ typer
 urllib3
 ```
 
----
-
 ## Assumptions
 
 * USDT-M Futures only
@@ -231,16 +209,13 @@ urllib3
 * Orders use GTC where applicable
 * Stop-Limit implemented via Binance Futures STOP type
 
----
-
 ## Summary
 
 Mockance demonstrates:
 
 * Clean API client design
-* Structured backend architecture
+* Structured backend architecture with separation of concerns
+* Shared service layer for reusable logic
 * Robust error handling and logging
-* Practical understanding of trading systems
+* Practical understanding of futures trading systems
 * Safe execution practices through validation and risk control
-
----
