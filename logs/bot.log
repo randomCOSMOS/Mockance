@@ -1,0 +1,213 @@
+2026-03-29 15:34:17 | INFO     | bot.cli              | CLI: place-order symbol=BTCUSDT side=SELL type=LIMIT qty=0.002 price=50000.0
+2026-03-29 15:34:17 | DEBUG    | bot.validators       | Validation passed: symbol=BTCUSDT side=SELL type=LIMIT qty=0.002 price=50000.0
+2026-03-29 15:34:17 | INFO     | bot.client           | Placing SELL LIMIT | symbol=BTCUSDT qty=0.002 price=50000.0
+2026-03-29 15:34:17 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'BTCUSDT', 'side': 'SELL', 'type': 'LIMIT', 'quantity': 0.002, 'price': 50000.0, 'timeInForce': 'GTC', 'timestamp': 1774778657219, 'signature': '***'}
+2026-03-29 15:34:18 | DEBUG    | bot.client           | Response 400: {"code":-4024,"msg":"Limit price can't be lower than 63210.53."}
+2026-03-29 15:34:18 | ERROR    | bot.cli              | Order failed: code=-4024 msg=Limit price can't be lower than 63210.53.
+2026-03-29 15:34:24 | INFO     | bot.cli              | CLI: place-order symbol=BTCUSDT side=SELL type=LIMIT qty=0.002 price=500000.0
+2026-03-29 15:34:24 | DEBUG    | bot.validators       | Validation passed: symbol=BTCUSDT side=SELL type=LIMIT qty=0.002 price=500000.0
+2026-03-29 15:34:24 | INFO     | bot.client           | Placing SELL LIMIT | symbol=BTCUSDT qty=0.002 price=500000.0
+2026-03-29 15:34:24 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'BTCUSDT', 'side': 'SELL', 'type': 'LIMIT', 'quantity': 0.002, 'price': 500000.0, 'timeInForce': 'GTC', 'timestamp': 1774778664694, 'signature': '***'}
+2026-03-29 15:34:25 | DEBUG    | bot.client           | Response 200: {"orderId":13006344669,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"37BYxWg4aTjy2vSuKCeSer","price":"500000.00","avgPrice":"0.00","origQty":"0.002","executedQty":"0.000","cumQty":"0.000","cumQuote":"0.00000","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"SE
+2026-03-29 15:34:25 | INFO     | bot.orders           | Limit order placed | id=13006344669 status=NEW price=500000.00
+2026-03-29 15:45:00 | DEBUG    | bot.client           | GET https://demo-fapi.binance.com/fapi/v2/account
+2026-03-29 15:45:01 | DEBUG    | bot.client           | Response 200: {"feeTier":0,"canTrade":true,"canDeposit":true,"canWithdraw":true,"feeBurn":true,"tradeGroupId":-1,"updateTime":0,"multiAssetsMargin":false,"totalInitialMargin":"50.19481001","totalMaintMargin":"1.16402460","totalWalletBalance":"4999.67426280","totalUnrealizedProfit":"-0.42670000","totalMarginBalanc
+2026-03-29 16:28:32 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=BTCUSDT qty=90.0 price=None
+2026-03-29 16:28:32 | INFO     | bot.client           | Placing BUY MARKET | symbol=BTCUSDT qty=90.0 price=MARKET
+2026-03-29 16:28:32 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'BTCUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 90.0, 'timestamp': 1774781912563, 'signature': '***'}
+2026-03-29 16:28:34 | DEBUG    | bot.client           | Response 400: {"code":-2019,"msg":"Margin is insufficient."}
+2026-03-29 16:28:34 | ERROR    | bot.tui              | TUI order failed: code=-2019 msg=Margin is insufficient.
+2026-03-29 16:29:01 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=BTCUSDT qty=1000000.0 price=None
+2026-03-29 16:29:01 | INFO     | bot.client           | Placing BUY MARKET | symbol=BTCUSDT qty=1000000.0 price=MARKET
+2026-03-29 16:29:01 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'BTCUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 1000000.0, 'timestamp': 1774781941411, 'signature': '***'}
+2026-03-29 16:29:01 | DEBUG    | bot.client           | Response 400: {"code":-4005,"msg":"Quantity greater than max quantity."}
+2026-03-29 16:29:01 | ERROR    | bot.tui              | TUI order failed: code=-4005 msg=Quantity greater than max quantity.
+2026-03-29 16:29:22 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=BTCUSDT qty=50000.0 price=None
+2026-03-29 16:29:22 | INFO     | bot.client           | Placing BUY MARKET | symbol=BTCUSDT qty=50000.0 price=MARKET
+2026-03-29 16:29:22 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'BTCUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 50000.0, 'timestamp': 1774781962274, 'signature': '***'}
+2026-03-29 16:29:22 | DEBUG    | bot.client           | Response 400: {"code":-4005,"msg":"Quantity greater than max quantity."}
+2026-03-29 16:29:22 | ERROR    | bot.tui              | TUI order failed: code=-4005 msg=Quantity greater than max quantity.
+2026-03-29 16:29:39 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=BTCUSDT qty=1000.0 price=None
+2026-03-29 16:29:39 | INFO     | bot.client           | Placing BUY MARKET | symbol=BTCUSDT qty=1000.0 price=MARKET
+2026-03-29 16:29:39 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'BTCUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 1000.0, 'timestamp': 1774781979131, 'signature': '***'}
+2026-03-29 16:29:39 | DEBUG    | bot.client           | Response 400: {"code":-2027,"msg":"Exceeded the maximum allowable position at current leverage."}
+2026-03-29 16:29:39 | ERROR    | bot.tui              | TUI order failed: code=-2027 msg=Exceeded the maximum allowable position at current leverage.
+2026-03-29 16:30:56 | DEBUG    | bot.client           | GET https://demo-fapi.binance.com/fapi/v2/account
+2026-03-29 16:30:57 | DEBUG    | bot.client           | Response 200: {"feeTier":0,"canTrade":true,"canDeposit":true,"canWithdraw":true,"feeBurn":true,"tradeGroupId":-1,"updateTime":0,"multiAssetsMargin":false,"totalInitialMargin":"50.20197037","totalMaintMargin":"1.16335277","totalWalletBalance":"4999.67426280","totalUnrealizedProfit":"-0.56990731","totalMarginBalanc
+2026-03-29 16:32:12 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=SOL qty=200.0 price=None
+2026-03-29 16:32:12 | INFO     | bot.client           | Placing BUY MARKET | symbol=SOL qty=200.0 price=MARKET
+2026-03-29 16:32:12 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'SOL', 'side': 'BUY', 'type': 'MARKET', 'quantity': 200.0, 'timestamp': 1774782132034, 'signature': '***'}
+2026-03-29 16:32:13 | DEBUG    | bot.client           | Response 400: {"code":-1121,"msg":"Invalid symbol."}
+2026-03-29 16:32:13 | ERROR    | bot.tui              | TUI order failed: code=-1121 msg=Invalid symbol.
+2026-03-29 16:32:37 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=SOLUSDT qty=200.0 price=None
+2026-03-29 16:32:37 | INFO     | bot.client           | Placing BUY MARKET | symbol=SOLUSDT qty=200.0 price=MARKET
+2026-03-29 16:32:37 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'SOLUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 200.0, 'timestamp': 1774782157141, 'signature': '***'}
+2026-03-29 16:32:37 | DEBUG    | bot.client           | Response 200: {"orderId":1830301901,"symbol":"SOLUSDT","status":"NEW","clientOrderId":"bLOr4P2VKKCNVvEZxIwnb1","price":"0.0000","avgPrice":"0.00","origQty":"200.00","executedQty":"0.00","cumQty":"0.00","cumQuote":"0.000000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY",
+2026-03-29 16:32:37 | INFO     | bot.orders           | Market order filled | id=1830301901 status=NEW executedQty=0.00 avgPrice=0.00
+2026-03-29 16:33:00 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=BTCETH qty=30.0 price=None
+2026-03-29 16:33:00 | INFO     | bot.client           | Placing BUY MARKET | symbol=BTCETH qty=30.0 price=MARKET
+2026-03-29 16:33:00 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'BTCETH', 'side': 'BUY', 'type': 'MARKET', 'quantity': 30.0, 'timestamp': 1774782180444, 'signature': '***'}
+2026-03-29 16:33:00 | DEBUG    | bot.client           | Response 400: {"code":-1121,"msg":"Invalid symbol."}
+2026-03-29 16:33:00 | ERROR    | bot.tui              | TUI order failed: code=-1121 msg=Invalid symbol.
+2026-03-29 16:38:28 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=SOLUSDT qty=20.0 price=None
+2026-03-29 16:38:28 | INFO     | bot.client           | Placing BUY MARKET | symbol=SOLUSDT qty=20.0 price=MARKET
+2026-03-29 16:38:28 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'SOLUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 20.0, 'timestamp': 1774782508415, 'signature': '***'}
+2026-03-29 16:38:29 | DEBUG    | bot.client           | Response 200: {"orderId":1830306112,"symbol":"SOLUSDT","status":"NEW","clientOrderId":"SvUumCCUs1kxVcA5F6Lngp","price":"0.0000","avgPrice":"0.00","origQty":"20.00","executedQty":"0.00","cumQty":"0.00","cumQuote":"0.000000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","
+2026-03-29 16:38:30 | INFO     | bot.orders           | Market order filled | id=1830306112 status=NEW executedQty=0.00 avgPrice=0.00
+2026-03-29 16:46:23 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=SOLUSDT qty=20.0 price=None
+2026-03-29 16:46:23 | INFO     | bot.client           | Placing BUY MARKET | symbol=SOLUSDT qty=20.0 price=MARKET
+2026-03-29 16:46:23 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'SOLUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 20.0, 'timestamp': 1774782983189, 'signature': '***'}
+2026-03-29 16:46:24 | DEBUG    | bot.client           | Response 200: {"orderId":1830314481,"symbol":"SOLUSDT","status":"NEW","clientOrderId":"1UjKzKgAcR2Ewjalh7KLz5","price":"0.0000","avgPrice":"0.00","origQty":"20.00","executedQty":"0.00","cumQty":"0.00","cumQuote":"0.000000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","
+2026-03-29 16:46:27 | INFO     | bot.orders           | Market order filled | id=1830314481 status=NEW executedQty=0.00 avgPrice=0.00
+2026-03-29 16:47:35 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=BTCUSDT qty=1.0 price=None
+2026-03-29 16:47:35 | INFO     | bot.client           | Placing BUY MARKET | symbol=BTCUSDT qty=1.0 price=MARKET
+2026-03-29 16:47:35 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'BTCUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 1.0, 'timestamp': 1774783055282, 'signature': '***'}
+2026-03-29 16:47:35 | DEBUG    | bot.client           | Response 200: {"orderId":13006469811,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"vJPPtF2TQVok8x7cpsw7Ag","price":"0.00","avgPrice":"0.00","origQty":"1.000","executedQty":"0.000","cumQty":"0.000","cumQuote":"0.00000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","
+2026-03-29 16:47:38 | INFO     | bot.orders           | Market order filled | id=13006469811 status=NEW executedQty=0.000 avgPrice=0.00
+2026-03-29 16:48:07 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=BTCUSDT qty=0.01 price=None
+2026-03-29 16:48:07 | INFO     | bot.client           | Placing BUY MARKET | symbol=BTCUSDT qty=0.01 price=MARKET
+2026-03-29 16:48:07 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'BTCUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 0.01, 'timestamp': 1774783087651, 'signature': '***'}
+2026-03-29 16:48:08 | DEBUG    | bot.client           | Response 200: {"orderId":13006470452,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"e8jd1vXnAHkiJW4JtI76nl","price":"0.00","avgPrice":"0.00","origQty":"0.010","executedQty":"0.000","cumQty":"0.000","cumQuote":"0.00000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","
+2026-03-29 16:48:11 | INFO     | bot.orders           | Market order filled | id=13006470452 status=NEW executedQty=0.000 avgPrice=0.00
+2026-03-29 17:15:22 | INFO     | bot.cli              | CLI: place-order symbol=BTCUSDT side=BUY type=MARKET qty=0.001 price=None
+2026-03-29 17:15:22 | DEBUG    | bot.validators       | Validation passed: symbol=BTCUSDT side=BUY type=MARKET qty=0.001 price=None
+2026-03-29 17:15:22 | INFO     | bot.client           | Placing BUY MARKET | symbol=BTCUSDT qty=0.001 price=MARKET
+2026-03-29 17:15:22 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'BTCUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 0.001, 'timestamp': 1774784722041, 'signature': '***'}
+2026-03-29 17:15:22 | DEBUG    | bot.client           | Response 400: {"code":-4164,"msg":"Order's notional must be no smaller than 100 (unless you choose reduce only)."}
+2026-03-29 17:15:22 | ERROR    | bot.cli              | Order failed: code=-4164 msg=Order's notional must be no smaller than 100 (unless you choose reduce only).
+2026-03-29 17:16:00 | INFO     | bot.cli              | CLI: place-order symbol=BTCUSDT side=BUY type=MARKET qty=0.0001 price=None
+2026-03-29 17:16:00 | DEBUG    | bot.validators       | Validation passed: symbol=BTCUSDT side=BUY type=MARKET qty=0.0001 price=None
+2026-03-29 17:16:00 | INFO     | bot.client           | Placing BUY MARKET | symbol=BTCUSDT qty=0.0001 price=MARKET
+2026-03-29 17:16:00 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'BTCUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 0.0001, 'timestamp': 1774784760363, 'signature': '***'}
+2026-03-29 17:16:01 | DEBUG    | bot.client           | Response 400: {"code":-1111,"msg":"Precision is over the maximum defined for this asset."}
+2026-03-29 17:16:01 | ERROR    | bot.cli              | Order failed: code=-1111 msg=Precision is over the maximum defined for this asset.
+2026-03-29 17:16:05 | INFO     | bot.cli              | CLI: place-order symbol=BTCUSDT side=BUY type=MARKET qty=0.01 price=None
+2026-03-29 17:16:05 | DEBUG    | bot.validators       | Validation passed: symbol=BTCUSDT side=BUY type=MARKET qty=0.01 price=None
+2026-03-29 17:16:05 | INFO     | bot.client           | Placing BUY MARKET | symbol=BTCUSDT qty=0.01 price=MARKET
+2026-03-29 17:16:05 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'BTCUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 0.01, 'timestamp': 1774784765246, 'signature': '***'}
+2026-03-29 17:16:06 | DEBUG    | bot.client           | Response 200: {"orderId":13006506185,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"P2wLLl9aNH7KJOWyTr81X7","price":"0.00","avgPrice":"0.00","origQty":"0.010","executedQty":"0.000","cumQty":"0.000","cumQuote":"0.00000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","
+2026-03-29 17:16:06 | INFO     | bot.orders           | Market order submitted | id=13006506185 status=NEW
+2026-03-29 17:16:07 | DEBUG    | bot.client           | GET https://demo-fapi.binance.com/fapi/v1/order
+2026-03-29 17:16:07 | DEBUG    | bot.client           | Response 200: {"orderId":13006506185,"symbol":"BTCUSDT","status":"FILLED","clientOrderId":"P2wLLl9aNH7KJOWyTr81X7","price":"0.00","avgPrice":"66870.90000","origQty":"0.010","executedQty":"0.010","cumQuote":"668.70900","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","posit
+2026-03-29 17:16:07 | DEBUG    | bot.orders           | Poll #1 | id=13006506185 status=FILLED
+2026-03-29 17:16:07 | INFO     | bot.orders           | Market order result   | id=13006506185 status=FILLED executedQty=0.010 avgPrice=66870.90000
+2026-03-29 17:16:19 | INFO     | bot.cli              | CLI: place-order symbol=SOLUSDT side=BUY type=MARKET qty=0.1 price=None
+2026-03-29 17:16:19 | DEBUG    | bot.validators       | Validation passed: symbol=SOLUSDT side=BUY type=MARKET qty=0.1 price=None
+2026-03-29 17:16:19 | INFO     | bot.client           | Placing BUY MARKET | symbol=SOLUSDT qty=0.1 price=MARKET
+2026-03-29 17:16:19 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'SOLUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 0.1, 'timestamp': 1774784779484, 'signature': '***'}
+2026-03-29 17:16:20 | DEBUG    | bot.client           | Response 200: {"orderId":1830333616,"symbol":"SOLUSDT","status":"NEW","clientOrderId":"IUzP26Tt1tvoLVtMyU1pCa","price":"0.0000","avgPrice":"0.00","origQty":"0.10","executedQty":"0.00","cumQty":"0.00","cumQuote":"0.000000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","p
+2026-03-29 17:16:20 | INFO     | bot.orders           | Market order submitted | id=1830333616 status=NEW
+2026-03-29 17:16:21 | DEBUG    | bot.client           | GET https://demo-fapi.binance.com/fapi/v1/order
+2026-03-29 17:16:21 | DEBUG    | bot.client           | Response 200: {"orderId":1830333616,"symbol":"SOLUSDT","status":"FILLED","clientOrderId":"IUzP26Tt1tvoLVtMyU1pCa","price":"0.0000","avgPrice":"82.690000","origQty":"0.10","executedQty":"0.10","cumQuote":"8.269000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","positionS
+2026-03-29 17:16:21 | DEBUG    | bot.orders           | Poll #1 | id=1830333616 status=FILLED
+2026-03-29 17:16:21 | INFO     | bot.orders           | Market order result   | id=1830333616 status=FILLED executedQty=0.10 avgPrice=82.690000
+2026-03-29 17:17:58 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=SOLUSDT qty=0.1 price=None stopPrice=None
+2026-03-29 17:17:58 | INFO     | bot.client           | Placing BUY MARKET | symbol=SOLUSDT qty=0.1 price=MARKET
+2026-03-29 17:17:58 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'SOLUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 0.1, 'timestamp': 1774784878665, 'signature': '***'}
+2026-03-29 17:17:59 | DEBUG    | bot.client           | Response 200: {"orderId":1830334591,"symbol":"SOLUSDT","status":"NEW","clientOrderId":"Mp4G6PRQ7viVbU3vpFZgMx","price":"0.0000","avgPrice":"0.00","origQty":"0.10","executedQty":"0.00","cumQty":"0.00","cumQuote":"0.000000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","p
+2026-03-29 17:17:59 | INFO     | bot.orders           | Market order submitted | id=1830334591 status=NEW
+2026-03-29 17:18:00 | DEBUG    | bot.client           | GET https://demo-fapi.binance.com/fapi/v1/order
+2026-03-29 17:18:00 | DEBUG    | bot.client           | Response 200: {"orderId":1830334591,"symbol":"SOLUSDT","status":"FILLED","clientOrderId":"Mp4G6PRQ7viVbU3vpFZgMx","price":"0.0000","avgPrice":"82.720000","origQty":"0.10","executedQty":"0.10","cumQuote":"8.272000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","positionS
+2026-03-29 17:18:00 | DEBUG    | bot.orders           | Poll #1 | id=1830334591 status=FILLED
+2026-03-29 17:18:00 | INFO     | bot.orders           | Market order result   | id=1830334591 status=FILLED executedQty=0.10 avgPrice=82.720000
+2026-03-29 17:33:15 | INFO     | bot.tui              | TUI: placing BUY LIMIT | symbol=ETHUSDT qty=1.0 price=34.0 stopPrice=None
+2026-03-29 17:33:15 | INFO     | bot.client           | Placing BUY LIMIT | symbol=ETHUSDT qty=1.0 price=34.0
+2026-03-29 17:33:15 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'ETHUSDT', 'side': 'BUY', 'type': 'LIMIT', 'quantity': 1.0, 'price': 34.0, 'timeInForce': 'GTC', 'timestamp': 1774785795951, 'signature': '***'}
+2026-03-29 17:33:16 | DEBUG    | bot.client           | Response 400: {"code":-4013,"msg":"Price less than min price."}
+2026-03-29 17:33:16 | DEBUG    | bot.tui              | TUI order failed: code=-4013 msg=Price less than min price.
+2026-03-29 17:41:58 | INFO     | bot.cli              | CLI: place-order symbol=BTCUSDT side=BUY type=MARKET qty=0.01 price=None stop=None
+2026-03-29 17:41:58 | DEBUG    | bot.validators       | Validation passed: symbol=BTCUSDT side=BUY type=MARKET qty=0.01 price=None stop_price=None
+2026-03-29 17:41:58 | INFO     | bot.client           | Placing BUY MARKET | symbol=BTCUSDT qty=0.01 price=MARKET
+2026-03-29 17:41:58 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'BTCUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 0.01, 'timestamp': 1774786318101, 'signature': '***'}
+2026-03-29 17:41:58 | DEBUG    | bot.client           | Response 200: {"orderId":13006540383,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"l37YqxrSONM2iX9YKJrKT9","price":"0.00","avgPrice":"0.00","origQty":"0.010","executedQty":"0.000","cumQty":"0.000","cumQuote":"0.00000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","
+2026-03-29 17:41:58 | INFO     | bot.orders           | Market order submitted | id=13006540383 status=NEW
+2026-03-29 17:41:59 | DEBUG    | bot.client           | GET https://demo-fapi.binance.com/fapi/v1/order
+2026-03-29 17:42:00 | DEBUG    | bot.client           | Response 200: {"orderId":13006540383,"symbol":"BTCUSDT","status":"FILLED","clientOrderId":"l37YqxrSONM2iX9YKJrKT9","price":"0.00","avgPrice":"66760.90000","origQty":"0.010","executedQty":"0.010","cumQuote":"667.60900","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","posit
+2026-03-29 17:42:00 | DEBUG    | bot.orders           | Poll #1 | id=13006540383 status=FILLED
+2026-03-29 17:42:00 | INFO     | bot.orders           | Market order result   | id=13006540383 status=FILLED executedQty=0.010 avgPrice=66760.90000
+2026-03-29 18:32:19 | INFO     | bot.cli              | CLI: place-order symbol=BTCUSDT side=BUY type=MARKET qty=0.01 price=None stop=None
+2026-03-29 18:32:19 | DEBUG    | bot.validators       | Validation passed: symbol=BTCUSDT side=BUY type=MARKET qty=0.01 price=None stop_price=None
+2026-03-29 18:32:19 | INFO     | bot.cli              | Dry run executed — no API call made
+2026-03-29 18:57:18 | DEBUG    | bot.client           | GET https://demo-fapi.binance.com/fapi/v1/allOrders
+2026-03-29 18:57:18 | DEBUG    | bot.client           | Response 200: [{"orderId":13006344669,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"37BYxWg4aTjy2vSuKCeSer","price":"500000","avgPrice":"0.00000","origQty":"0.002","executedQty":"0","cumQuote":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"BOTH",
+2026-03-29 19:02:44 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=BTCUSDT qty=20.0 price=None stopPrice=None
+2026-03-29 19:02:44 | INFO     | bot.client           | Placing BUY MARKET | symbol=BTCUSDT qty=20.0 price=MARKET
+2026-03-29 19:02:44 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'BTCUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 20.0, 'timestamp': 1774791164408, 'signature': '***'}
+2026-03-29 19:02:45 | DEBUG    | bot.client           | Response 400: {"code":-2019,"msg":"Margin is insufficient."}
+2026-03-29 19:02:45 | DEBUG    | bot.tui              | TUI order failed: code=-2019 msg=Margin is insufficient.
+2026-03-29 19:03:10 | INFO     | bot.tui              | TUI: placing SELL MARKET | symbol=BTCUSDT qty=0.001 price=None stopPrice=None
+2026-03-29 19:03:10 | INFO     | bot.client           | Placing SELL MARKET | symbol=BTCUSDT qty=0.001 price=MARKET
+2026-03-29 19:03:10 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'BTCUSDT', 'side': 'SELL', 'type': 'MARKET', 'quantity': 0.001, 'timestamp': 1774791190952, 'signature': '***'}
+2026-03-29 19:03:11 | DEBUG    | bot.client           | Response 400: {"code":-4164,"msg":"Order's notional must be no smaller than 100 (unless you choose reduce only)."}
+2026-03-29 19:03:11 | DEBUG    | bot.tui              | TUI order failed: code=-4164 msg=Order's notional must be no smaller than 100 (unless you choose reduce only).
+2026-03-29 19:03:26 | INFO     | bot.tui              | TUI: placing SELL MARKET | symbol=BTCUSDT qty=0.01 price=None stopPrice=None
+2026-03-29 19:03:26 | INFO     | bot.client           | Placing SELL MARKET | symbol=BTCUSDT qty=0.01 price=MARKET
+2026-03-29 19:03:26 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'BTCUSDT', 'side': 'SELL', 'type': 'MARKET', 'quantity': 0.01, 'timestamp': 1774791206045, 'signature': '***'}
+2026-03-29 19:03:26 | DEBUG    | bot.client           | Response 200: {"orderId":13006655279,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"J8tFTcVeSTvm7HSfgpS2ng","price":"0.00","avgPrice":"0.00","origQty":"0.010","executedQty":"0.000","cumQty":"0.000","cumQuote":"0.00000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"SELL",
+2026-03-29 19:03:26 | INFO     | bot.orders           | Market order submitted | id=13006655279 status=NEW
+2026-03-29 19:03:27 | DEBUG    | bot.client           | GET https://demo-fapi.binance.com/fapi/v1/order
+2026-03-29 19:03:27 | DEBUG    | bot.client           | Response 200: {"orderId":13006655279,"symbol":"BTCUSDT","status":"FILLED","clientOrderId":"J8tFTcVeSTvm7HSfgpS2ng","price":"0.00","avgPrice":"66620.30000","origQty":"0.010","executedQty":"0.010","cumQuote":"666.20300","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"SELL","posi
+2026-03-29 19:03:27 | DEBUG    | bot.orders           | Poll #1 | id=13006655279 status=FILLED
+2026-03-29 19:03:27 | INFO     | bot.orders           | Market order result   | id=13006655279 status=FILLED executedQty=0.010 avgPrice=66620.30000
+2026-03-29 19:03:42 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=SOLUSDT qty=12.0 price=None stopPrice=None
+2026-03-29 19:03:42 | INFO     | bot.client           | Placing BUY MARKET | symbol=SOLUSDT qty=12.0 price=MARKET
+2026-03-29 19:03:42 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'SOLUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 12.0, 'timestamp': 1774791222446, 'signature': '***'}
+2026-03-29 19:03:42 | DEBUG    | bot.client           | Response 200: {"orderId":1830401475,"symbol":"SOLUSDT","status":"NEW","clientOrderId":"xfan0T0rqMW1JPvWwoQCQT","price":"0.0000","avgPrice":"0.00","origQty":"12.00","executedQty":"0.00","cumQty":"0.00","cumQuote":"0.000000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","
+2026-03-29 19:03:42 | INFO     | bot.orders           | Market order submitted | id=1830401475 status=NEW
+2026-03-29 19:03:43 | DEBUG    | bot.client           | GET https://demo-fapi.binance.com/fapi/v1/order
+2026-03-29 19:03:43 | DEBUG    | bot.client           | Response 200: {"orderId":1830401475,"symbol":"SOLUSDT","status":"FILLED","clientOrderId":"xfan0T0rqMW1JPvWwoQCQT","price":"0.0000","avgPrice":"82.040000","origQty":"12.00","executedQty":"12.00","cumQuote":"984.480000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","posit
+2026-03-29 19:03:43 | DEBUG    | bot.orders           | Poll #1 | id=1830401475 status=FILLED
+2026-03-29 19:03:43 | INFO     | bot.orders           | Market order result   | id=1830401475 status=FILLED executedQty=12.00 avgPrice=82.040000
+2026-03-29 19:03:56 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=SOLUSDT qty=12.0 price=None stopPrice=None
+2026-03-29 19:03:56 | INFO     | bot.client           | Placing BUY MARKET | symbol=SOLUSDT qty=12.0 price=MARKET
+2026-03-29 19:03:56 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'SOLUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 12.0, 'timestamp': 1774791236534, 'signature': '***'}
+2026-03-29 19:03:56 | DEBUG    | bot.client           | Response 200: {"orderId":1830401578,"symbol":"SOLUSDT","status":"NEW","clientOrderId":"O68RFJJjewhaKYcM6ZwETW","price":"0.0000","avgPrice":"0.00","origQty":"12.00","executedQty":"0.00","cumQty":"0.00","cumQuote":"0.000000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","
+2026-03-29 19:03:56 | INFO     | bot.orders           | Market order submitted | id=1830401578 status=NEW
+2026-03-29 19:03:57 | DEBUG    | bot.client           | GET https://demo-fapi.binance.com/fapi/v1/order
+2026-03-29 19:03:57 | DEBUG    | bot.client           | Response 200: {"orderId":1830401578,"symbol":"SOLUSDT","status":"FILLED","clientOrderId":"O68RFJJjewhaKYcM6ZwETW","price":"0.0000","avgPrice":"82.040000","origQty":"12.00","executedQty":"12.00","cumQuote":"984.480000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","posit
+2026-03-29 19:03:57 | DEBUG    | bot.orders           | Poll #1 | id=1830401578 status=FILLED
+2026-03-29 19:03:57 | INFO     | bot.orders           | Market order result   | id=1830401578 status=FILLED executedQty=12.00 avgPrice=82.040000
+2026-03-29 19:04:07 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=SOLUSDT qty=30.0 price=None stopPrice=None
+2026-03-29 19:04:07 | INFO     | bot.client           | Placing BUY MARKET | symbol=SOLUSDT qty=30.0 price=MARKET
+2026-03-29 19:04:07 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'SOLUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 30.0, 'timestamp': 1774791247884, 'signature': '***'}
+2026-03-29 19:04:08 | DEBUG    | bot.client           | Response 200: {"orderId":1830401718,"symbol":"SOLUSDT","status":"NEW","clientOrderId":"f3Eh0DrodRXG21k8yZczTM","price":"0.0000","avgPrice":"0.00","origQty":"30.00","executedQty":"0.00","cumQty":"0.00","cumQuote":"0.000000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","
+2026-03-29 19:04:08 | INFO     | bot.orders           | Market order submitted | id=1830401718 status=NEW
+2026-03-29 19:04:09 | DEBUG    | bot.client           | GET https://demo-fapi.binance.com/fapi/v1/order
+2026-03-29 19:04:09 | DEBUG    | bot.client           | Response 200: {"orderId":1830401718,"symbol":"SOLUSDT","status":"FILLED","clientOrderId":"f3Eh0DrodRXG21k8yZczTM","price":"0.0000","avgPrice":"82.040000","origQty":"30.00","executedQty":"30.00","cumQuote":"2461.200000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","posi
+2026-03-29 19:04:09 | DEBUG    | bot.orders           | Poll #1 | id=1830401718 status=FILLED
+2026-03-29 19:04:09 | INFO     | bot.orders           | Market order result   | id=1830401718 status=FILLED executedQty=30.00 avgPrice=82.040000
+2026-03-29 19:04:19 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=ETHUSDT qty=20.0 price=None stopPrice=None
+2026-03-29 19:04:19 | INFO     | bot.client           | Placing BUY MARKET | symbol=ETHUSDT qty=20.0 price=MARKET
+2026-03-29 19:04:19 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'ETHUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 20.0, 'timestamp': 1774791259608, 'signature': '***'}
+2026-03-29 19:04:19 | DEBUG    | bot.client           | Response 400: {"code":-2019,"msg":"Margin is insufficient."}
+2026-03-29 19:04:19 | DEBUG    | bot.tui              | TUI order failed: code=-2019 msg=Margin is insufficient.
+2026-03-29 19:04:31 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=ETHUSDT qty=5.0 price=None stopPrice=None
+2026-03-29 19:04:31 | INFO     | bot.client           | Placing BUY MARKET | symbol=ETHUSDT qty=5.0 price=MARKET
+2026-03-29 19:04:31 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'ETHUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 5.0, 'timestamp': 1774791271496, 'signature': '***'}
+2026-03-29 19:04:31 | DEBUG    | bot.client           | Response 400: {"code":-2019,"msg":"Margin is insufficient."}
+2026-03-29 19:04:31 | DEBUG    | bot.tui              | TUI order failed: code=-2019 msg=Margin is insufficient.
+2026-03-29 19:04:36 | DEBUG    | bot.client           | GET https://demo-fapi.binance.com/fapi/v2/account
+2026-03-29 19:04:36 | DEBUG    | bot.client           | Response 200: {"feeTier":0,"canTrade":true,"canDeposit":true,"canWithdraw":true,"feeBurn":true,"tradeGroupId":-1,"updateTime":0,"multiAssetsMargin":false,"totalInitialMargin":"4640.42297366","totalMaintMargin":"532.39958735","totalWalletBalance":"4961.11676595","totalUnrealizedProfit":"-174.08850047","totalMargin
+2026-03-29 19:05:11 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=ETHUSDT qty=0.1 price=None stopPrice=None
+2026-03-29 19:05:11 | INFO     | bot.client           | Placing BUY MARKET | symbol=ETHUSDT qty=0.1 price=MARKET
+2026-03-29 19:05:11 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'ETHUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 0.1, 'timestamp': 1774791311787, 'signature': '***'}
+2026-03-29 19:05:11 | DEBUG    | bot.client           | Response 200: {"orderId":8624946523,"symbol":"ETHUSDT","status":"NEW","clientOrderId":"OjidXNToUkOSacaOKAXrsk","price":"0.00","avgPrice":"0.00","origQty":"0.100","executedQty":"0.000","cumQty":"0.000","cumQuote":"0.00000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","p
+2026-03-29 19:05:11 | INFO     | bot.orders           | Market order submitted | id=8624946523 status=NEW
+2026-03-29 19:05:12 | DEBUG    | bot.client           | GET https://demo-fapi.binance.com/fapi/v1/order
+2026-03-29 19:05:13 | DEBUG    | bot.client           | Response 200: {"orderId":8624946523,"symbol":"ETHUSDT","status":"FILLED","clientOrderId":"OjidXNToUkOSacaOKAXrsk","price":"0.00","avgPrice":"1991.87000","origQty":"0.100","executedQty":"0.100","cumQuote":"199.18700","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","positio
+2026-03-29 19:05:13 | DEBUG    | bot.orders           | Poll #1 | id=8624946523 status=FILLED
+2026-03-29 19:05:13 | INFO     | bot.orders           | Market order result   | id=8624946523 status=FILLED executedQty=0.100 avgPrice=1991.87000
+2026-03-29 19:05:25 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=ETHUSDT qty=2.0 price=None stopPrice=None
+2026-03-29 19:05:25 | INFO     | bot.client           | Placing BUY MARKET | symbol=ETHUSDT qty=2.0 price=MARKET
+2026-03-29 19:05:25 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'ETHUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 2.0, 'timestamp': 1774791325658, 'signature': '***'}
+2026-03-29 19:05:25 | DEBUG    | bot.client           | Response 400: {"code":-2019,"msg":"Margin is insufficient."}
+2026-03-29 19:05:25 | DEBUG    | bot.tui              | TUI order failed: code=-2019 msg=Margin is insufficient.
+2026-03-29 19:05:54 | INFO     | bot.tui              | TUI: placing BUY MARKET | symbol=ETHUSDT qty=1.0 price=None stopPrice=None
+2026-03-29 19:05:54 | INFO     | bot.client           | Placing BUY MARKET | symbol=ETHUSDT qty=1.0 price=MARKET
+2026-03-29 19:05:54 | DEBUG    | bot.client           | POST https://demo-fapi.binance.com/fapi/v1/order params={'symbol': 'ETHUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 1.0, 'timestamp': 1774791354503, 'signature': '***'}
+2026-03-29 19:05:54 | DEBUG    | bot.client           | Response 200: {"orderId":8624947103,"symbol":"ETHUSDT","status":"NEW","clientOrderId":"dRWlcd8LGBRVjBY8LecImN","price":"0.00","avgPrice":"0.00","origQty":"1.000","executedQty":"0.000","cumQty":"0.000","cumQuote":"0.00000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","p
+2026-03-29 19:05:54 | INFO     | bot.orders           | Market order submitted | id=8624947103 status=NEW
+2026-03-29 19:05:55 | DEBUG    | bot.client           | GET https://demo-fapi.binance.com/fapi/v1/order
+2026-03-29 19:05:55 | DEBUG    | bot.client           | Response 200: {"orderId":8624947103,"symbol":"ETHUSDT","status":"FILLED","clientOrderId":"dRWlcd8LGBRVjBY8LecImN","price":"0.00","avgPrice":"1990.38000","origQty":"1.000","executedQty":"1.000","cumQuote":"1990.38000","timeInForce":"GTC","type":"MARKET","reduceOnly":false,"closePosition":false,"side":"BUY","positi
+2026-03-29 19:05:55 | DEBUG    | bot.orders           | Poll #1 | id=8624947103 status=FILLED
+2026-03-29 19:05:55 | INFO     | bot.orders           | Market order result   | id=8624947103 status=FILLED executedQty=1.000 avgPrice=1990.38000
